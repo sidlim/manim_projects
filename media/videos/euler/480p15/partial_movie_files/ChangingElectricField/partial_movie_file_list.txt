@@ -1,3 +1,0 @@
-file 'file:/home/sid/manim-0.2.0/projects/media/videos/euler/480p15/partial_movie_files/ChangingElectricField/00000.mp4'
-file 'file:/home/sid/manim-0.2.0/projects/media/videos/euler/480p15/partial_movie_files/ChangingElectricField/00001.mp4'
-file 'file:/home/sid/manim-0.2.0/projects/media/videos/euler/480p15/partial_movie_files/ChangingElectricField/00002.mp4'

@@ -1,2 +1,0 @@
-file 'file:/home/sid/manim-0.2.0/projects/media/videos/pascal_triangle/480p15/partial_movie_files/PascalPoly/00000.mp4'
-file 'file:/home/sid/manim-0.2.0/projects/media/videos/pascal_triangle/480p15/partial_movie_files/PascalPoly/00001.mp4'
