@@ -43,10 +43,14 @@ class SumAnimation(Scene):
         add_rig = self.build_addition_rig(tex_coeff[0][-1], tex_coeff[0][0])
 
         self.play(Write(rows[0]))
-        self.wait(3)
+        self.wait(1)
         self.play(FadeIn(add_rig))
-        self.wait(3)
+        self.wait(1)
         self.play(Write(tex_coeff[1][0]))
+        self.wait(1)
+        self.play(add_rig.animate.shift(2 * RIGHT))
+        self.wait(1)
+        self.play(Write(tex_coeff[1][1]))
     
     def build_addition_rig(self, left_el, right_el):
         plus = MathTex("+")
