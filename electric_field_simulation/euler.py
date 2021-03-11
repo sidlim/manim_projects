@@ -1,4 +1,4 @@
-from manimlib.imports import *
+from manim import *
 
 def get_force_field_func(*point_strength_pairs, **kwargs):
     radius = kwargs.get("radius", 0.5)

@@ -1,4 +1,4 @@
-from manimlib.imports import *
+from manim import *
 import math
 
 def int_binom(n: int, k: int) -> int:
@@ -21,12 +21,12 @@ class VRow(VGroup):
 class PascalTriangle(Scene):
     def construct(self):
         coeff = [[int_binom(i, j) for j in range(0, i + 1)] for i in range(0, 4)]
-        tex_wrap = (lambda x: TexMobject(str(x)))
+        tex_wrap = (lambda x: MathTex(str(x)))
         triangle = VRow(*[VRow(*map(tex_wrap, coeff[i]), spacing = 2 * RIGHT) for i in range(len(coeff))], spacing = 2 * DOWN)
-        #row0 = VRow(*[TexMobject(str(int_binom(0, k))) for k in range(0, 1)], spacing = 2 * RIGHT)
-        #row1 = VRow(*[TexMobject(str(int_binom(1, k))) for k in range(0, 2)], spacing = 2 * RIGHT)
-        #row2 = VRow(*[TexMobject(str(int_binom(2, k))) for k in range(0, 3)], spacing = 2 * RIGHT)
-        #row3 = VRow(*[TexMobject(str(int_binom(3, k))) for k in range(0, 4)], spacing = 2 * RIGHT)
+        #row0 = VRow(*[MathTex(str(int_binom(0, k))) for k in range(0, 1)], spacing = 2 * RIGHT)
+        #row1 = VRow(*[MathTex(str(int_binom(1, k))) for k in range(0, 2)], spacing = 2 * RIGHT)
+        #row2 = VRow(*[MathTex(str(int_binom(2, k))) for k in range(0, 3)], spacing = 2 * RIGHT)
+        #row3 = VRow(*[MathTex(str(int_binom(3, k))) for k in range(0, 4)], spacing = 2 * RIGHT)
         #triangle = VRow(*[row0, row1, row2, row3], spacing = 2 * DOWN)
         self.play(Write(triangle), run_time=6)
         self.wait(3)
@@ -34,7 +34,7 @@ class PascalTriangle(Scene):
 class SumAnimation(Scene):
     def construct(self):
         coeff = [[int_binom(i, j) for j in range(0, i + 1)] for i in range(0, 4)]
-        tex_wrap = (lambda x: TexMobject(str(x)))
+        tex_wrap = (lambda x: MathTex(str(x)))
         rows = [VRow(*map(tex_wrap, coeff[i]), spacing = 2 * RIGHT) for i in range(len(coeff))]
 
         # triangle is never rendered, but the code helps position its contents appropriately, so I'll keep it
@@ -44,7 +44,7 @@ class SumAnimation(Scene):
 class PascalMonomials(Scene):
     def construct(self):
         coeff_data = [(int_binom(4, i), i) for i in range(0, 5)]
-        tex_wrap = (lambda x: TexMobject(str(x[0]), 'x^' + str(x[1])))
+        tex_wrap = (lambda x: MathTex(str(x[0]), 'x^' + str(x[1])))
         poly = VRow(*map(tex_wrap, coeff_data), spacing = 2 * RIGHT)
         self.play(Write(poly))
         self.wait(6)
