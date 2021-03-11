@@ -33,13 +33,27 @@ class PascalTriangle(Scene):
 
 class SumAnimation(Scene):
     def construct(self):
-        coeff = [[int_binom(i, j) for j in range(0, i + 1)] for i in range(0, 4)]
+        # Build Pascal's Triangle:
         tex_wrap = (lambda x: MathTex(str(x)))
-        rows = [VRow(*map(tex_wrap, coeff[i]), spacing = 2 * RIGHT) for i in range(len(coeff))]
-
-        # triangle is never rendered, but the code helps position its contents appropriately, so I'll keep it
+        tex_coeff = [{j: tex_wrap(int_binom(i, j)) for j in range(-1, i + 2)} for i in range(0, 4)]
+        rows = [VRow(*tex_coeff[i].values(), spacing = 2 * RIGHT) for i in range(len(tex_coeff))]
         triangle = VRow(*rows, spacing = 2 * DOWN)
+
+        # Build addition apparatus:
+        add_rig = self.build_addition_rig(tex_coeff[0][-1], tex_coeff[0][0])
+
         self.play(Write(rows[0]))
+        self.wait(3)
+        self.play(FadeIn(add_rig))
+        self.wait(3)
+        self.play(Write(tex_coeff[1][0]))
+    
+    def build_addition_rig(self, left_el, right_el):
+        plus = MathTex("+")
+        plus.move_to((left_el.get_center() + right_el.get_center()) / 2.0)
+        arrow = Arrow(start = 0.75 * UP, end = 0.75 * DOWN)
+        arrow.next_to(plus, DOWN * 1.5)
+        add_rig = VGroup(*[plus, arrow])
 
 class PascalMonomials(Scene):
     def construct(self):
