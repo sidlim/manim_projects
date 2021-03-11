@@ -54,6 +54,7 @@ class SumAnimation(Scene):
         arrow = Arrow(start = 0.75 * UP, end = 0.75 * DOWN)
         arrow.next_to(plus, DOWN * 1.5)
         add_rig = VGroup(*[plus, arrow])
+        return(add_rig)
 
 class PascalMonomials(Scene):
     def construct(self):
