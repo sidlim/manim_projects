@@ -40,17 +40,28 @@ class SumAnimation(Scene):
         triangle = VRow(*rows, spacing = 2 * DOWN)
 
         # Build addition apparatus:
-        add_rig = self.build_addition_rig(tex_coeff[0][-1], tex_coeff[0][0])
+        
 
-        self.play(Write(rows[0]))
+        self.play(Write(tex_coeff[0][0]))
         self.wait(1)
-        self.play(FadeIn(add_rig))
-        self.wait(1)
-        self.play(Write(tex_coeff[1][0]))
-        self.wait(1)
-        self.play(add_rig.animate.shift(2 * RIGHT))
-        self.wait(1)
-        self.play(Write(tex_coeff[1][1]))
+        for i in range(1, len(rows)):
+            add_rig = self.build_addition_rig(tex_coeff[i - 1][-1], tex_coeff[i - 1][0])
+            self.play(FadeIn(tex_coeff[i - 1][-1]), FadeIn(tex_coeff[i - 1][i]))
+            self.wait(1)
+            self.play(FadeIn(add_rig), Write(tex_coeff[i][0]))
+            for j in range(1, i + 1):
+                self.play(add_rig.animate.shift(2 * RIGHT))
+                self.play(Write(tex_coeff[i][j]))
+            self.play(FadeOut(tex_coeff[i - 1][-1]), FadeOut(tex_coeff[i - 1][i]), FadeOut(add_rig))
+        #self.play(Write(tex_coeff[0][-1]), Write(tex_coeff[0][1]))
+        #self.wait(1)
+        #self.play(FadeIn(add_rig))
+        #self.wait(1)
+        #self.play(Write(tex_coeff[1][0]))
+        #self.wait(1)
+        #self.play(add_rig.animate.shift(2 * RIGHT))
+        #self.wait(1)
+        #self.play(Write(tex_coeff[1][1]))
     
     def build_addition_rig(self, left_el, right_el):
         plus = MathTex("+")
