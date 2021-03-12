@@ -1,5 +1,6 @@
 from manim import *
 import math
+import itertools
 
 def int_binom(n: int, k: int) -> int:
     if (k < 0) or (k > n):
@@ -35,12 +36,36 @@ class SumAnimation(Scene):
     def construct(self):
         # Build Pascal's Triangle:
         tex_wrap = (lambda x: MathTex(str(x)))
+        tex_coeff = {i: {j: tex_wrap(int_binom(i, j)) for j in range(0, i + 1)} for i in range(1, 5)}
+        rows = [VRow(*tex_coeff[i].values(), spacing = 2 * RIGHT) for i in tex_coeff.keys()]
+        triangle = VRow(*rows, spacing = 2 * DOWN)        
+        for i in tex_coeff.keys():
+            self.play(Write(tex_coeff[i][0]), Write(tex_coeff[i][i]))
+        self.wait(1)
+        for i in itertools.islice(tex_coeff.keys(), 1, None):
+            add_rig = self.build_addition_rig(tex_coeff[i - 1][0], tex_coeff[i - 1][1])
+            self.wait(1)
+            self.play(FadeIn(add_rig), Write(tex_coeff[i][1]))
+            for j in range(1, i - 1):
+                self.play(add_rig.animate.shift(2 * RIGHT))
+                self.play(Write(tex_coeff[i][j + 1]))
+            self.play(FadeOut(add_rig))
+
+    def build_addition_rig(self, left_el, right_el):
+        plus = MathTex("+")
+        plus.move_to((left_el.get_center() + right_el.get_center()) / 2.0)
+        arrow = Arrow(start = 0.75 * UP, end = 0.75 * DOWN)
+        arrow.next_to(plus, DOWN * 1.5)
+        add_rig = VGroup(*[plus, arrow])
+        return(add_rig)
+
+class SumAnimationWithZeros(Scene):
+    def construct(self):
+        # Build Pascal's Triangle:
+        tex_wrap = (lambda x: MathTex(str(x)))
         tex_coeff = [{j: tex_wrap(int_binom(i, j)) for j in range(-1, i + 2)} for i in range(0, 4)]
         rows = [VRow(*tex_coeff[i].values(), spacing = 2 * RIGHT) for i in range(len(tex_coeff))]
-        triangle = VRow(*rows, spacing = 2 * DOWN)
-
-        # Build addition apparatus:
-        
+        triangle = VRow(*rows, spacing = 2 * DOWN)        
 
         self.play(Write(tex_coeff[0][0]))
         self.wait(1)
@@ -53,15 +78,7 @@ class SumAnimation(Scene):
                 self.play(add_rig.animate.shift(2 * RIGHT))
                 self.play(Write(tex_coeff[i][j]))
             self.play(FadeOut(tex_coeff[i - 1][-1]), FadeOut(tex_coeff[i - 1][i]), FadeOut(add_rig))
-        #self.play(Write(tex_coeff[0][-1]), Write(tex_coeff[0][1]))
-        #self.wait(1)
-        #self.play(FadeIn(add_rig))
-        #self.wait(1)
-        #self.play(Write(tex_coeff[1][0]))
-        #self.wait(1)
-        #self.play(add_rig.animate.shift(2 * RIGHT))
-        #self.wait(1)
-        #self.play(Write(tex_coeff[1][1]))
+        
     
     def build_addition_rig(self, left_el, right_el):
         plus = MathTex("+")
