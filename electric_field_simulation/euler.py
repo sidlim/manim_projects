@@ -20,37 +20,30 @@ def get_force_field_func(*point_strength_pairs, **kwargs):
     return(func)
 
 class ElectricParticle(Circle):
-    CONFIG = {
-        "color": WHITE,
-        "sign": "+"
-    }
-    
-    def __init__(self, radius = 0.5, **kwargs):
-        digest_config(self, kwargs)
-        super().__init__(
+    def __init__(self, radius = 0.5, color = WHITE, sign = "+", **kwargs):
+        #digest_config(self, kwargs)
+        super(ElectricParticle, self).__init__(
             stroke_color = WHITE,
             stroke_width = 0.5,
-            fill_color = self.color,
+            fill_color = color,
             fill_opacity = 0.8,
-            radius = radius
+            radius = radius,
+            **kwargs
         )
         
-        sign = TexMobject(self.sign)
+        sign = MathTex(sign)
         sign.set_stroke(WHITE, 1)
         sign.set_width(0.5 * self.get_width())
         sign.move_to(self)
         self.add(sign)
 
 class Proton(ElectricParticle):
-    CONFIG = {
-        "color": RED_E
-    }
+    def __init__(self, color = RED_E, **kwargs):
+        super(Proton, self).__init__(color = color, **kwargs)
 
 class Electron(ElectricParticle):
-    CONFIG = {
-        "color": BLUE_E,
-        "sign": "-"
-    }
+    def __init__(self, color = BLUE_E, sign = "-", **kwargs):
+        super(Electron, self).__init__(color = color, sign = sign, **kwargs)
 
 class ChangingElectricField(Scene):
     CONFIG = {
@@ -58,6 +51,11 @@ class ChangingElectricField(Scene):
         "num_particles": 6,
         "anim_time": 5
     }
+    def __init__(self, vector_field_config = {}, num_particles = 6, anim_time = 5, **kwargs):
+        super(ChangingElectricField, self).__init__(**kwargs)
+        self.vector_field_config = vector_field_config
+        self.num_particles = num_particles
+        self.anim_time = anim_time
     
     def construct(self):
         particles = self.get_particles()
