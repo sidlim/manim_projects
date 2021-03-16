@@ -1,11 +1,17 @@
 from manim import *
-import math, itertools, functools
+import math, itertools, functools, random
+
+def gen_binom(n, k):
+    coeff = 1
+    if n < 0 and k < 0:
+        return(0)
+    for j in range(0, k):
+        coeff = coeff * (n - j) / (j + 1)
+    return(coeff)
+        
 
 def int_binom(n: int, k: int) -> int:
-    if (k < 0) or (k > n):
-        return(0)
-    else:
-        return(math.factorial(n) // (math.factorial(k) * math.factorial(n-k)))    
+        return(int(gen_binom(n, k)))
 
 def centroid(*iterables):
     sum = functools.reduce((lambda x,y: x + y), iterables)
@@ -29,12 +35,8 @@ class PascalTriangle(Scene):
     def construct(self):
         coeff = [[int_binom(i, j) for j in range(0, i + 1)] for i in range(0, 4)]
         tex_wrap = (lambda x: MathTex(str(x)))
-        triangle = VRow(*[VRow(*map(tex_wrap, coeff[i]), spacing = 2 * RIGHT) for i in range(len(coeff))], spacing = 2 * DOWN)
-        #row0 = VRow(*[MathTex(str(int_binom(0, k))) for k in range(0, 1)], spacing = 2 * RIGHT)
-        #row1 = VRow(*[MathTex(str(int_binom(1, k))) for k in range(0, 2)], spacing = 2 * RIGHT)
-        #row2 = VRow(*[MathTex(str(int_binom(2, k))) for k in range(0, 3)], spacing = 2 * RIGHT)
-        #row3 = VRow(*[MathTex(str(int_binom(3, k))) for k in range(0, 4)], spacing = 2 * RIGHT)
-        #triangle = VRow(*[row0, row1, row2, row3], spacing = 2 * DOWN)
+        triangle = VGroup(*[VGroup(*map(tex_wrap, coeff[i])).arrange_submobjects(RIGHT, buff = 2) for i in range(len(coeff))]).arrange_submobjects(DOWN, buff = 2)
+        
         self.play(Write(triangle), run_time=6)
         self.wait(3)
 
@@ -64,6 +66,40 @@ class SumAnimation(Scene):
         arrow.next_to(plus, DOWN * 1.5)
         add_rig = VGroup(*[plus, arrow])
         return(add_rig)
+
+class SubsetSelection(Scene):
+    def construct(self):
+        # Universal Set creation:
+        U_circle = Circle(color = WHITE, radius = 3.0)
+        U_label = MathTex("\mathbb{U}")
+        U_label.next_to(U_circle, direction=UP)
+        universal_set = VGroup(U_circle, U_label)
+
+        # Member Creation:
+        members = VGroup(*map((lambda c: Dot(color = c, radius = 0.15)), [RED, BLUE, GREEN, YELLOW, PURPLE]))
+        for dot in members.submobjects:
+            dot.shift(random.random() * 4.5 * UP + random.random() * 4.5 * LEFT - 2.25 * UP - 2.25 * LEFT)
+            #members.rotate_about_origin(random.random() * 2 * math.pi / float(len(members)))
+        
+        # Subset Creation:
+        S1_circle = Circle(color = WHITE, radius = 0.7)
+        S1_circle.shift(0.3 * LEFT + DOWN)
+        S2_circle = Circle(color = WHITE, radius = 1.0)
+        S2_circle.shift(1.5 * LEFT)
+
+        subset_circles = [S1_circle, S2_circle]
+
+        self.play(FadeIn(universal_set), FadeIn(members))
+        # "Say you wanted to pick a set of 2 objects from another set U"
+        self.wait(3)
+        self.play(ShowCreation(subset_circles[0]))
+        # "Here's one example of such a set."
+        self.wait(3)
+        # "Of course, it's not the only one we can make."
+        self.play(Uncreate(subset_circles[0]))
+        self.play(ShowCreation(subset_circles[1]))
+        self.wait(3)
+
 
 class PascalMonomials(Scene):
     def construct(self):
