@@ -42,6 +42,7 @@ class PascalTriangle(Scene):
 
 class SumAnimation(Scene):
     def construct(self):
+        # There's a great historical angle on this: https://youtu.be/gMlf1ELvRzc?t=398
         # Build Pascal's Triangle:
         tex_wrap = (lambda x: MathTex(str(x)))
         tex_coeff = {i: {j: tex_wrap(int_binom(i, j)) for j in range(0, i + 1)} for i in range(1, 5)}
