@@ -20,17 +20,6 @@ def centroid(*iterables):
 def center_centroid(*iterables):
     return(centroid(*map((lambda x : x.get_center()), iterables)))
 
-class VRow(VGroup):
-    def __init__(self, *vmobjects, spacing = 1 * RIGHT, **kwargs):
-        super().__init__(**kwargs)
-        vmobj_ct = len(vmobjects)
-        center_offset = ((vmobj_ct - 1) % 2) / 2.0 * spacing
-        spacing_offset = (((vmobj_ct - 1) // 2) - vmobj_ct + 1) * spacing
-        for vmobj in vmobjects:
-            self.add(vmobj)
-            vmobj.shift(center_offset + spacing_offset)
-            spacing_offset += spacing
-
 class PascalTriangle(Scene):
     def construct(self):
         coeff = [[int_binom(i, j) for j in range(0, i + 1)] for i in range(0, 4)]
@@ -101,11 +90,10 @@ class SubsetSelection(Scene):
         self.play(ShowCreation(subset_circles[1]))
         self.wait(3)
 
-
 class PascalMonomials(Scene):
     def construct(self):
         coeff_data = [(int_binom(4, i), i) for i in range(0, 5)]
         tex_wrap = (lambda x: MathTex(str(x[0]), 'x^' + str(x[1])))
-        poly = VRow(*map(tex_wrap, coeff_data), spacing = 2 * RIGHT)
+        poly = VGroup(*map(tex_wrap, coeff_data)).arrange_submobjects(RIGHT, buff = 2)
         self.play(Write(poly))
         self.wait(6)
