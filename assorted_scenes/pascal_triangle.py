@@ -13,6 +13,10 @@ def gen_binom(n, k):
 def int_binom(n: int, k: int) -> int:
         return(int(gen_binom(n, k)))
 
+def itr_interleave(*iterables):
+    unfiltered = itertools.chain.from_iterable(itertools.zip_longest(*iterables))
+    return(filter(lambda i: i is not None, unfiltered))
+
 def centroid(*iterables):
     sum = functools.reduce((lambda x,y: x + y), iterables)
     return(sum / float(len(iterables)))
@@ -90,10 +94,18 @@ class SubsetSelection(Scene):
         self.play(ShowCreation(subset_circles[1]))
         self.wait(3)
 
-class PascalMonomials(Scene):
+class Polynomial_Mult(Scene):
     def construct(self):
-        coeff_data = [(int_binom(4, i), i) for i in range(0, 5)]
-        tex_wrap = (lambda x: MathTex(str(x[0]), 'x^' + str(x[1])))
-        poly = VGroup(*map(tex_wrap, coeff_data)).arrange_submobjects(RIGHT, buff = 2)
-        self.play(Write(poly))
-        self.wait(6)
+        row_prev = self.row_gen(3, buff = 0.6)
+        row_prev.shift(1.5 * UP)
+        self.play(Write(row_prev))
+        self.wait(3)
+        multiplier = self.row_gen(1, dir = LEFT, buff = 0.6)
+        self.play(Write(multiplier))
+    
+    def row_gen(self, n, dir = RIGHT, buff = 1):
+        coeff_data = [(int_binom(n, i), i) for i in range(0, n + 1)]
+        monomials_tex = map((lambda x: MathTex(str(x[0]), 'x^' + str(x[1]))), coeff_data)
+        plusses = [MathTex("+") for i in range(0, n)]
+        polynomial_tex = VGroup(*itr_interleave(monomials_tex, plusses)).arrange_submobjects(dir, buff = buff)
+        return(polynomial_tex)
