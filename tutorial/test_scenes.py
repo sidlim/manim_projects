@@ -1,4 +1,4 @@
-from manimlib.imports import *
+from manim import *
 
 class FirstScene(Scene):
     def construct(self):

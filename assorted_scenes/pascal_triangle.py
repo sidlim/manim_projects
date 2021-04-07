@@ -100,12 +100,33 @@ class Polynomial_Mult(Scene):
         row_prev.shift(1.5 * UP)
         self.play(Write(row_prev))
         self.wait(3)
-        multiplier = self.row_gen(1, dir = LEFT, buff = 0.6)
-        self.play(Write(multiplier))
+        mult_sign = MathTex("\\times")
+        mult_sign.shift(4.0 * LEFT)
+        prod_line = Line(4.5 * LEFT, 4.5 * RIGHT)
+        prod_line.shift(0.5 * DOWN)
+        binom_factor = self.row_gen(1, dir = LEFT, buff = 0.6)
+        binom_factor.shift(1.93 * RIGHT)
+        self.play(Write(binom_factor), Write(mult_sign), Write(prod_line))
     
-    def row_gen(self, n, dir = RIGHT, buff = 1):
+    def row_gen(self, n, dir = RIGHT, buff = 1, show_all = False):
         coeff_data = [(int_binom(n, i), i) for i in range(0, n + 1)]
-        monomials_tex = map((lambda x: MathTex(str(x[0]), 'x^' + str(x[1]))), coeff_data)
+        
+        def tex_monomial(x):
+            if show_all:
+                return(MathTex(str(x[0]), 'x^' + str(x[1])))
+            else:
+                if x[1] == 0:
+                    return(MathTex(str(x[0])))
+                else:
+                    coeff = ""
+                    if not x[0] == 1:
+                        coeff = str(x[0])
+                    if x[1] == 1:
+                        return(MathTex(coeff, 'x'))
+                    else:
+                        return(MathTex(coeff, 'x^' + str(x[1])))
+                
+        monomials_tex = map(tex_monomial, coeff_data)
         plusses = [MathTex("+") for i in range(0, n)]
         polynomial_tex = VGroup(*itr_interleave(monomials_tex, plusses)).arrange_submobjects(dir, buff = buff)
         return(polynomial_tex)
