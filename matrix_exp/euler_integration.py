@@ -33,24 +33,33 @@ class Euler_Integration_2D(Scene):
             Dx_vec = Vector(Dx).put_start_and_end_on(x_n, x_n + Dx)
             Dx_vec_label_pre = MathTex("\\frac{dx}{dt}").next_to(Dx_vec, direction = DOWN)
             Dx_vec_label_post = MathTex("\\frac{1}{" + str(int(1 / self.dt)) + "}\\frac{dx}{dt}").next_to(Dx_vec, direction = DOWN)
+            if self.dt == 1:
+                Dx_vec_label_post = MathTex("\\frac{dx}{dt}").next_to(Dx_vec, direction = DOWN)
             self.play(FadeIn(Dx_vec), FadeIn(Dx_vec_label_pre))
             self.wait(2)
             self.play(Dx_vec.animate.scale(self.dt, about_point = Dx_vec.get_start()), ReplacementTransform(Dx_vec_label_pre, Dx_vec_label_post))
-            #self.play(Dx_vec.animate.put_start_and_end_on(x_n, x_n + self.dt * Dx))
 
             x_pt = Dot()
             x_pt.move_to(x_n + self.dt * Dx)
             x_pt_label = MathTex("x_" + str(n + 1)).next_to(x_pt, direction = DOWN)
             self.play(FadeIn(x_pt))
-            self.wait(2)
+            self.wait(1)
 
             self.play(FadeOut(Dx_vec), FadeOut(Dx_vec_label_post), FadeIn(x_pt_label))
+            self.wait(1)
 
             x_n = x_n + self.dt * Dx
 
-class Linear_2D_Int(Euler_Integration_2D):
+class Linear_2D_2Step_Int(Euler_Integration_2D):
     def __init__(self):
         A = numpy.array([[0.0, -1.0], [1.0, 0.0]])
         Ax = lambda p: numpy.matmul(A, p[0:2])
         x0 = numpy.array([1.5, 2.0, 0.0])
-        super(Linear_2D_Int, self).__init__(Ax, x0, 0.5, 2)
+        super(Linear_2D_2Step_Int, self).__init__(Ax, x0, 0.5, 2)
+
+class Linear_2D_1Step_Int(Euler_Integration_2D):
+    def __init__(self):
+        A = numpy.array([[0.0, -1.0], [1.0, 0.0]])
+        Ax = lambda p: numpy.matmul(A, p[0:2])
+        x0 = numpy.array([1.5, 2.0, 0.0])
+        super(Linear_2D_1Step_Int, self).__init__(Ax, x0, 1, 1)
