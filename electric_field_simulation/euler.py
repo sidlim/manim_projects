@@ -46,11 +46,6 @@ class Electron(ElectricParticle):
         super(Electron, self).__init__(color = color, sign = sign, **kwargs)
 
 class ChangingElectricField(Scene):
-    CONFIG = {
-        "vector_field_config": {},
-        "num_particles": 6,
-        "anim_time": 5
-    }
     def __init__(self, vector_field_config = {}, num_particles = 6, anim_time = 5, **kwargs):
         super(ChangingElectricField, self).__init__(**kwargs)
         self.vector_field_config = vector_field_config

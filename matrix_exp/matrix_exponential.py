@@ -11,6 +11,32 @@ import math, itertools, functools, random, numpy, logging
 # draw Ax & then show rescale animation by t or t/2
 # Show sum as a new point
 
+class Euler_Integration_2D(Scene):
+    def __init__(self, derivative, init_val, dt, n_step, **kwargs):
+        super(Euler_Integration_2D, self).__init__(**kwargs)
+        self.derivative = derivative
+        self.init_val = init_val
+        self.dt = dt
+        self.n_step = n_step
+    
+    def construct(self):
+        vec_field = VectorField(self.derivative)
+        x_n = self.init_val
+        for n in range(self.n_step):
+
+            x_pt = Dot(point = x_n)
+            x_pt_label = MathTex("x_" + str(n)).next_to(x_pt, direction = DOWN)
+            self.play(FadeIn(x_pt), FadeIn(x_pt_label))
+            self.wait(2)
+
+            Dx = vec_field.get_vector(x_n)
+            Dx_vec = Vector(Dx).put_start_and_end_on(x_n, x_n + Dx)
+            Dx_vec_label = MathTex("\\frac{dx}{dt}").next_to(Dx_vec, direction = DOWN)
+            self.play(FadeIn(Dx_vec), FadeIn(Dx_vec_label))
+            self.wait(2)
+            self.play(Dx_vec.animate.scale(self.dt))
+            
+        
 
 # Second thing to do: Write animation for the algebraic expression
 # Highlight elements of the line as we go:
