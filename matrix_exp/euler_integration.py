@@ -1,4 +1,5 @@
 from manim import *
+from manim_presentation import Slide
 import math, itertools, functools, random, numpy, logging
 
 # Want a nice visualization of euler integration here
@@ -7,7 +8,7 @@ import math, itertools, functools, random, numpy, logging
 # 2 - 1D case
 # 3 - 2D case
 
-class Euler_Integration_2D(Scene):
+class Euler_Integration_2D(Slide):
     def __init__(self, derivative, init_val, dt, n_step, **kwargs):
         super(Euler_Integration_2D, self).__init__(**kwargs)
         self.derivative = derivative
@@ -25,7 +26,7 @@ class Euler_Integration_2D(Scene):
         x_pt.move_to(x_n)
         x_pt_label = MathTex("x_" + str(0)).next_to(x_pt, direction = DOWN)
         self.play(FadeIn(x_pt), FadeIn(x_pt_label))
-        self.wait(2)
+        self.pause()
 
         for n in range(self.n_step):
 
@@ -36,17 +37,18 @@ class Euler_Integration_2D(Scene):
             if self.dt == 1:
                 Dx_vec_label_post = MathTex("\\frac{dx}{dt}").next_to(Dx_vec, direction = DOWN)
             self.play(FadeIn(Dx_vec), FadeIn(Dx_vec_label_pre))
-            self.wait(2)
+            self.pause()
             self.play(Dx_vec.animate.scale(self.dt, about_point = Dx_vec.get_start()), ReplacementTransform(Dx_vec_label_pre, Dx_vec_label_post))
+            self.pause()
 
             x_pt = Dot()
             x_pt.move_to(x_n + self.dt * Dx)
             x_pt_label = MathTex("x_" + str(n + 1)).next_to(x_pt, direction = DOWN)
             self.play(FadeIn(x_pt))
-            self.wait(1)
+            self.pause()
 
             self.play(FadeOut(Dx_vec), FadeOut(Dx_vec_label_post), FadeIn(x_pt_label))
-            self.wait(1)
+            self.pause()
 
             x_n = x_n + self.dt * Dx
 
