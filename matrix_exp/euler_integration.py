@@ -1,5 +1,4 @@
 from manim import *
-from manim_presentation import Slide
 import math, itertools, functools, random, numpy, logging
 
 # Want a nice visualization of euler integration here
@@ -8,7 +7,7 @@ import math, itertools, functools, random, numpy, logging
 # 2 - 1D case
 # 3 - 2D case
 
-class Euler_Integration_2D(Slide):
+class Euler_Integration_2D(Scene):
     def __init__(self, derivative, init_val, dt, n_step, **kwargs):
         super(Euler_Integration_2D, self).__init__(**kwargs)
         self.derivative = derivative
@@ -26,7 +25,7 @@ class Euler_Integration_2D(Slide):
         x_pt.move_to(x_n)
         x_pt_label = MathTex("x_" + str(0)).next_to(x_pt, direction = DOWN)
         self.play(FadeIn(x_pt), FadeIn(x_pt_label))
-        self.pause()
+        self.wait(2)
 
         for n in range(self.n_step):
 
@@ -37,18 +36,18 @@ class Euler_Integration_2D(Slide):
             if self.dt == 1:
                 Dx_vec_label_post = MathTex("\\frac{dx}{dt}").next_to(Dx_vec, direction = DOWN)
             self.play(FadeIn(Dx_vec), FadeIn(Dx_vec_label_pre))
-            self.pause()
+            self.wait(2)
             self.play(Dx_vec.animate.scale(self.dt, about_point = Dx_vec.get_start()), ReplacementTransform(Dx_vec_label_pre, Dx_vec_label_post))
-            self.pause()
+            self.wait(2)
 
             x_pt = Dot()
             x_pt.move_to(x_n + self.dt * Dx)
             x_pt_label = MathTex("x_" + str(n + 1)).next_to(x_pt, direction = DOWN)
             self.play(FadeIn(x_pt))
-            self.pause()
+            self.wait(2)
 
             self.play(FadeOut(Dx_vec), FadeOut(Dx_vec_label_post), FadeIn(x_pt_label))
-            self.pause()
+            self.wait(2)
 
             x_n = x_n + self.dt * Dx
 
@@ -65,3 +64,10 @@ class Linear_2D_1Step_Int(Euler_Integration_2D):
         Ax = lambda p: numpy.matmul(A, p[0:2])
         x0 = numpy.array([1.5, 2.0, 0.0])
         super(Linear_2D_1Step_Int, self).__init__(Ax, x0, 1, 1)
+
+class Linear_2D_4Step_Int(Euler_Integration_2D):
+    def __init__(self):
+        A = numpy.array([[0.0, -1.0], [1.0, 0.0]])
+        Ax = lambda p: numpy.matmul(A, p[0:2])
+        x0 = numpy.array([1.5, 2.0, 0.0])
+        super(Linear_2D_4Step_Int, self).__init__(Ax, x0, 0.25, 4)
